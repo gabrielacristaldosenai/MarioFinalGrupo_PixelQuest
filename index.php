@@ -1,13 +1,6 @@
 <?php
 require_once 'conexao.php';
 
-/*
- * ⚠️ Seus códigos usavam nomes diferentes para o banco:
- *    tabela  -> "ranking" (maioria) ou "pontuacoes" (versão Monsters)
- *    coluna  -> "pontos" (maioria) ou "ponto" (versão Mario)
- * Ajuste aqui para bater com o SEU banco. O mesmo vale para
- * salvar_ranking.php e obter_ranking.php.
- */
 const TABELA_RANKING = 'ranking';
 const COLUNA_PONTOS  = 'pontos';
 
@@ -52,6 +45,8 @@ $vj = @filemtime(__DIR__ . '/js/script.js') ?: 1;
 
     <div class="game-container">
 
+        <button type="button" class="sound-toggle" id="sound-toggle" aria-label="Desligar o som" aria-pressed="false">🔊</button>
+
         <header class="hud">
             <div class="hud-item hud-player">
                 <span class="label">Jogador</span>
@@ -92,7 +87,7 @@ $vj = @filemtime(__DIR__ . '/js/script.js') ?: 1;
             <div class="ground" id="ground" aria-hidden="true"></div>
 
             <div class="shadow" id="shadow" aria-hidden="true"></div>
-            <img class="player" id="player" src="assets/mario.gif" alt="Mario" draggable="false">
+            <img class="player" id="player" src="assets/homem_1.gif" alt="Homem 1" draggable="false">
 
             <div class="level-banner" id="level-banner" aria-live="polite"></div>
             <span class="jump-tip" id="jump-tip">Toque na tela ou aperte espaço para pular</span>
@@ -111,10 +106,10 @@ $vj = @filemtime(__DIR__ . '/js/script.js') ?: 1;
                 </div>
 
                 <button type="button" class="chosen" id="chosen-btn" aria-label="Trocar personagem">
-                    <img id="chosen-img" src="assets/mario.gif" alt="">
+                    <img id="chosen-img" src="assets/homem_1.gif" alt="">
                     <span class="chosen-text">
                         <small>Você joga com</small>
-                        <strong id="chosen-name">Mario</strong>
+                        <strong id="chosen-name">Homem 1</strong>
                     </span>
                     <span class="chosen-action">Trocar</span>
                 </button>

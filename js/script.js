@@ -14,19 +14,22 @@
     //   largura = largura em pixels no jogo
     //   over    = imagem de "fim de jogo" (opcional; sem ela o personagem só tomba)
     const CHARACTERS = {
-        mario:   { nome: 'Mario',   img: 'assets/mario.gif',   largura: 130, over: 'assets/game-over.png' },
-        luigi:   { nome: 'Luigi',   img: 'assets/luigi.gif',   largura: 110, over: 'assets/game-overL.png' },
-        yoshi:   { nome: 'Yoshi',   img: 'assets/yoshi.gif',   largura: 110, over: 'assets/game-overY.png' },
-        roberto: { nome: 'Roberto', img: 'assets/roberto.gif', largura: 130, over: 'assets/roberto-game-over.png', secret: true },
-        daniel:  { nome: 'Daniel',  img: 'assets/daniel.gif',  largura: 130, over: 'assets/daniel-game-over.png', secret: true },
-        sulley:  { nome: 'Sulley',  img: 'assets/sulley.png',  largura: 120 },
-        mike:    { nome: 'Mike',    img: 'assets/mike.png',    largura: 120 },
-        boo:     { nome: 'Boo',     img: 'assets/boo.png',     largura: 105 },
-        randall: { nome: 'Randall', img: 'assets/randall.png', largura: 100 },
-        roz:     { nome: 'Roz',     img: 'assets/roz.svg',     largura: 115 }
+        homem_1:  { nome: 'Pessoa 1',  img: 'assets/homem_1.gif',  largura: 82 },
+        homem_2:  { nome: 'Pessoa 2',  img: 'assets/homem_2.gif',  largura: 82 },
+        mulher_1: { nome: 'Pessoa 3', img: 'assets/mulher_1.gif', largura: 120 },
+        mulher_2: { nome: 'Pessoa 4', img: 'assets/mulher_2.gif', largura: 120 },
+        abner:    { nome: 'Abner',    img: 'assets/abner.gif',    largura: 103, secret: true },
+        agatha:   { nome: 'Agatha',   img: 'assets/agatha.gif',   largura: 114, secret: true },
+        arthur:   { nome: 'Arthur',   img: 'assets/arthur.gif',   largura: 82,  secret: true },
+        gabi:     { nome: 'Gabi',     img: 'assets/gabi.gif',     largura: 120, secret: true },
+        leo:      { nome: 'Leo',      img: 'assets/leo.gif',      largura: 110, secret: true },
+        roberto:  { nome: 'Roberto',  img: 'assets/roberto.gif',  largura: 130, over: 'assets/roberto-game-over.png', secret: true },
+        daniel:   { nome: 'Daniel',   img: 'assets/daniel.gif',   largura: 130, over: 'assets/daniel-game-over.png', secret: true }
     };
-    const DEFAULT_CHARACTER = 'mario';
-    const PIPE_SRC = 'assets/pipe.png';
+    // Precisa ser um personagem que NÃO seja secreto (é o que todo mundo tem de início)
+    const DEFAULT_CHARACTER = 'homem_1';
+    const PIPE_SRC = 'assets/roboVivo.png';         // obstáculo (robô inteiro)
+    const PIPE_DEAD_SRC = 'assets/roboMorto.png';   // o mesmo robô, depois que o jogador bate
 
     // Nomes secretos: ao digitar o nome, o personagem é liberado (para sempre)
     // e o fundo do jogo vira a imagem do tema enquanto você jogar com esse nome.
@@ -37,9 +40,28 @@
     };
     const SECRETS = {
         roberto: { char: 'roberto', theme: 'toquio' },
-        daniel:  { char: 'daniel',  theme: 'galinha' }
+        daniel:  { char: 'daniel',  theme: 'galinha' },
+        // Sem theme = só libera o personagem, o cenário continua o normal
+        leo:     { char: 'leo',     theme: null },
+        gabi:    { char: 'gabi',    theme: null },
+        agatha:  { char: 'agatha',  theme: null },
+        abner:   { char: 'abner',   theme: null },
+        artur:   { char: 'arthur',  theme: null },
+        arthur:  { char: 'arthur',  theme: null }
     };
     const BG_SPEED_FACTOR = 0.6;   // o fundo rola um pouco mais devagar que os canos
+
+    // Fundos padrão: um por nível, nesta ordem. Depois do último, volta ao primeiro.
+    //   ratio      = largura / altura da imagem
+    //   groundFrac = altura do chão na imagem (de baixo pra cima), como fração da altura.
+    //                Se o personagem parecer "flutuando" ou "afundado", ajuste só esse número.
+    const SCENES = [
+        { src: 'assets/entradaSesi.png',  ratio: 2048 / 768, groundFrac: 0.238 },
+        { src: 'assets/entradaSenai.png', ratio: 2048 / 768, groundFrac: 0.190 },
+        { src: 'assets/ladoSenai.png',    ratio: 2172 / 724, groundFrac: 0.137 },
+        { src: 'assets/ladoSesi.jpg',     ratio: 1584 / 672, groundFrac: 0.122 }
+    ];
+    const sceneIndexFor = (nivel) => (nivel - 1) % SCENES.length;
 
     const COIN_POINTS = 25;
 
@@ -78,15 +100,24 @@
     const JUMP_VELOCITY = 950;     // px/s
     const JUMP_BUFFER = 0.12;      // perdoa o toque dado um instante antes de aterrissar
     const PLAYER_X = 28;
-    const PIPE_BASE_W = 80;
+    const PIPE_BASE_W = 150;       // largura do robô (obstáculo), na altura de referência de 480px
     const COIN_BASE = 34;
 
     const KEYS = {
         player: 'superjump_player',
         char: 'superjump_char',
         best: 'superjump_best',
-        unlocked: 'superjump_unlocked'
+        unlocked: 'superjump_unlocked',
+        muted: 'superjump_muted'
     };
+
+    // Músicas (arquivos MP3 na pasta assets/audio). Menu, ranking e fim de jogo tocam "menu";
+    // durante a partida toca "game". Os sons de moeda e coração são gerados pelo navegador.
+    const SOUNDS = {
+        menu: 'assets/audio/menu.mp3',
+        game: 'assets/audio/jogo.mp3'
+    };
+    const MUSIC_VOLUME = 0.35;     // 0 a 1
 
     /* =====================================================
        ELEMENTOS
@@ -163,7 +194,8 @@
         invuln: 0,              // tempo restante de invencibilidade
         nextHeartAt: HEART_EVERY,
         heartPending: false,
-        theme: null             // 'toquio' | 'galinha' | null
+        theme: null,            // 'toquio' | 'galinha' | null (fundo secreto; null = fundos padrão)
+        scene: 0                // índice em SCENES (fundo padrão atual)
     };
 
     let dims = { w: 900, h: 480, s: 1, groundH: 56, playerW: 130, playerH: 130, pipeW: 80, coin: 34 };
@@ -172,6 +204,8 @@
     const pipeProbe = new Image();
     pipeProbe.src = PIPE_SRC;
     Object.values(THEMES).forEach((t) => { new Image().src = t.src; });
+    SCENES.forEach((s) => { new Image().src = s.src; });
+    new Image().src = PIPE_DEAD_SRC;
     Object.values(CHARACTERS).forEach((c) => {
         [c.img, c.over].filter(Boolean).forEach((src) => { new Image().src = src; });
     });
@@ -218,6 +252,118 @@
     const currentSpeed = () => (dims.w / BASE_CROSS_TIME) * state.level.rate;
 
     /* =====================================================
+       SONS
+       ===================================================== */
+    const soundToggle = $('sound-toggle');
+    const music = {};
+    Object.entries(SOUNDS).forEach(([name, src]) => {
+        const a = new Audio(src);
+        a.loop = true;
+        a.volume = MUSIC_VOLUME;
+        a.preload = 'auto';
+        music[name] = a;
+    });
+
+    let muted = store.get(KEYS.muted) === '1';
+    let currentTrack = null;
+    let audioCtx = null;
+
+    function tryPlay(a) {
+        const p = a.play();
+        if (p && p.catch) p.catch(() => { /* bloqueado até o 1º toque, ou arquivo ausente */ });
+        return p;
+    }
+
+    // restart = true começa a música do zero (usado na música da partida)
+    function playMusic(name, restart = false) {
+        currentTrack = name;
+        Object.entries(music).forEach(([key, a]) => { if (key !== name) a.pause(); });
+        const a = music[name];
+        if (restart) { try { a.currentTime = 0; } catch (e) { /* ignora */ } }
+        if (!muted) tryPlay(a);
+    }
+
+    function renderSoundToggle() {
+        soundToggle.textContent = muted ? '🔇' : '🔊';
+        soundToggle.setAttribute('aria-pressed', muted ? 'true' : 'false');
+        soundToggle.setAttribute('aria-label', muted ? 'Ligar o som' : 'Desligar o som');
+    }
+
+    function setMuted(value) {
+        muted = value;
+        store.set(KEYS.muted, muted ? '1' : '0');
+        renderSoundToggle();
+        if (muted) Object.values(music).forEach((a) => a.pause());
+        else if (currentTrack) tryPlay(music[currentTrack]);
+    }
+
+    function getAudioCtx() {
+        if (!audioCtx) {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) return null;
+            audioCtx = new AC();
+        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        return audioCtx;
+    }
+
+    // Uma nota curta (efeitos sonoros)
+    function beep(freq, start, dur, type, vol) {
+        const ctx = getAudioCtx();
+        if (!ctx) return;
+        const t0 = ctx.currentTime + start;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, t0);
+        gain.gain.setValueAtTime(0.0001, t0);
+        gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(t0);
+        osc.stop(t0 + dur + 0.02);
+    }
+
+    // Moeda: dois "blips" agudos, no estilo clássico
+    function playCoin() {
+        if (muted) return;
+        beep(988, 0, 0.09, 'square', 0.12);
+        beep(1319, 0.08, 0.3, 'square', 0.12);
+    }
+
+    // Coração: arpejo subindo, mais suave
+    function playHeart() {
+        if (muted) return;
+        [523, 659, 784, 1047].forEach((f, i) => beep(f, i * 0.08, 0.24, 'triangle', 0.2));
+    }
+
+    function initAudio() {
+        renderSoundToggle();
+        soundToggle.addEventListener('click', () => setMuted(!muted));
+
+        // Navegadores só deixam tocar som depois do primeiro toque/tecla na página
+        const unlockEvents = ['pointerdown', 'pointerup', 'click', 'keydown', 'touchend'];
+        const removeUnlock = () => unlockEvents.forEach((ev) => window.removeEventListener(ev, unlock));
+        function unlock() {
+            getAudioCtx();
+            if (muted || !currentTrack) return;
+            const p = music[currentTrack].play();
+            if (p && p.then) p.then(removeUnlock).catch(() => { /* tenta de novo no próximo toque */ });
+            else removeUnlock();
+        }
+        unlockEvents.forEach((ev) => window.addEventListener(ev, unlock));
+
+        // Aba escondida: pausa a música
+        document.addEventListener('visibilitychange', () => {
+            if (!currentTrack) return;
+            if (document.hidden) music[currentTrack].pause();
+            else if (!muted) tryPlay(music[currentTrack]);
+        });
+
+        playMusic('menu');
+    }
+
+    /* =====================================================
        PERSONAGENS SECRETOS E TEMAS
        ===================================================== */
     let unlocked = new Set();
@@ -237,15 +383,36 @@
         return true;
     }
 
+    // Fundo atual: o secreto (se houver) ou o do nível em que o jogador está
+    const currentBg = () => (state.theme ? THEMES[state.theme] : SCENES[state.scene]);
+
+    function applyBackground() {
+        const bg = currentBg();
+        board.classList.add('themed');
+        board.classList.remove(...Object.keys(THEMES).map((k) => 'theme-' + k));
+        if (state.theme) board.classList.add('theme-' + state.theme);
+        bgImgs.forEach((img) => {
+            if (img.getAttribute('src') !== bg.src) img.src = bg.src;
+        });
+    }
+
     function applyTheme(key) {
         state.theme = THEMES[key] ? key : null;
-        board.classList.remove('themed', ...Object.keys(THEMES).map((k) => 'theme-' + k));
-        if (state.theme) {
-            board.classList.add('themed', 'theme-' + state.theme);
-            bgImgs.forEach((img) => {
-                if (img.getAttribute('src') !== THEMES[state.theme].src) img.src = THEMES[state.theme].src;
-            });
-        }
+        applyBackground();
+    }
+
+    // Troca o fundo padrão quando o nível muda (nomes secretos mantêm o seu fundo)
+    function changeScene(index) {
+        if (state.theme || index === state.scene) return;
+        state.scene = index;
+        applyBackground();
+        measure();
+        refitObjects();
+    }
+
+    // Cada fundo tem o chão numa altura; canos e moedas já na tela acompanham
+    function refitObjects() {
+        state.coinsOnBoard.forEach((c) => { c.el.style.bottom = (dims.groundH + c.y) + 'px'; });
     }
 
     /* =====================================================
@@ -258,7 +425,7 @@
         const s = h / 480;
 
         // Fundo temático: a imagem cobre o palco, e o chão passa a ser o da imagem
-        const theme = state.theme ? THEMES[state.theme] : null;
+        const theme = currentBg();
         let sceneW = 0;
         if (theme) {
             const scaledH = Math.max(h, w / theme.ratio);
@@ -296,6 +463,7 @@
 
     window.addEventListener('resize', () => {
         measure();
+        refitObjects();
         if (!state.playing) renderIdle();
     });
 
@@ -396,6 +564,8 @@
         player.classList.remove('is-dead');
         board.classList.remove('shake');
         player.style.marginLeft = '';
+        state.scene = 0;          // toda partida começa no primeiro fundo
+        applyBackground();
         measure();
 
         Object.assign(state, {
@@ -429,6 +599,7 @@
         clouds[1].x = dims.w * 0.62;
 
         spawnPipe();
+        playMusic('game', true);
 
         if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
 
@@ -510,7 +681,7 @@
 
             const l = p.x + p.w * 0.14;
             const r = p.x + p.w * 0.86;
-            if (state.invuln <= 0 && pR > l && pL < r && pBottom < p.h * 0.88) {
+            if (!p.broken && state.invuln <= 0 && pR > l && pL < r && pBottom < p.h * 0.88) {
                 if (loseLife(p, i)) return;   // acabaram as vidas
             }
         }
@@ -577,6 +748,7 @@
             state.level = lvl;
             levelDisplay.textContent = lvl.nivel;
             setStage(stageFor(lvl.nivel));
+            changeScene(sceneIndexFor(lvl.nivel));
             showBanner('Nível ' + lvl.nivel);
         }
     }
@@ -597,8 +769,7 @@
             : 1.2;
         const h = Math.round(w * ratio);
 
-        // O cano é um bloco com a imagem dentro; nos fundos temáticos ganha uma
-        // "raiz" que desce até o fim da tela, para ficar plantado no chão
+        // O obstáculo (o robô) é um bloco com a imagem dentro
         const el = document.createElement('div');
         el.className = 'pipe';
         el.style.width = w + 'px';
@@ -611,16 +782,9 @@
         img.draggable = false;
         el.appendChild(img);
 
-        if (state.theme) {
-            const root = document.createElement('div');
-            root.className = 'pipe-ext';
-            root.style.backgroundImage = `url('${PIPE_SRC}')`;
-            root.style.height = (dims.groundH + 24) + 'px';
-            el.appendChild(root);
-        }
         board.appendChild(el);
 
-        const pipe = { el, x: dims.w, w, h };
+        const pipe = { el, img, x: dims.w, w, h, broken: false };
         state.pipes.push(pipe);
 
         // Tempo entre canos fica parecido em qualquer velocidade
@@ -681,6 +845,7 @@
         state.coinsOnBoard.splice(index, 1);
 
         if (item.type === 'heart') {
+            playHeart();
             if (state.lives < MAX_LIVES) {
                 state.lives += 1;
                 renderLives();
@@ -692,6 +857,7 @@
             return;
         }
 
+        playCoin();
         floatText('+' + COIN_POINTS, item.x, top);
         state.coins += 1;
         coinsDisplay.textContent = state.coins;
@@ -716,19 +882,25 @@
         livesDisplay.setAttribute('aria-label', `${state.lives} de ${MAX_LIVES} vidas`);
     }
 
+    // O robô que levou a batida vira a versão quebrada (e não machuca mais)
+    function breakRobot(pipe) {
+        pipe.broken = true;
+        pipe.img.src = PIPE_DEAD_SRC;
+        pipe.el.classList.add('broken');
+    }
+
     // Retorna true se foi a última vida (fim de jogo)
     function loseLife(pipe, index) {
         state.lives -= 1;
         renderLives();
+        breakRobot(pipe);
 
         if (state.lives <= 0) {
             gameOver();
             return true;
         }
 
-        // Ainda tem vida: remove o cano que bateu e fica invencível por um instante
-        pipe.el.remove();
-        state.pipes.splice(index, 1);
+        // Ainda tem vida: o robô fica quebrado passando pela tela e o jogador fica invencível por um instante
         state.invuln = INVULN_TIME;
         player.classList.add('blink');
 
@@ -787,6 +959,7 @@
         board.classList.add('shake');
         player.classList.remove('blink');
         player.classList.add('is-dead');
+        playMusic('menu');
 
         const c = CHARACTERS[state.char];
         if (c.over) {
@@ -956,6 +1129,7 @@
         }
         clearObjects();
         selectCharacter(state.char);   // volta o sprite normal
+        playMusic('menu');
         showPanel('home');
         openModal(startModal);
     });
@@ -963,6 +1137,8 @@
     /* =====================================================
        INICIALIZAÇÃO
        ===================================================== */
+    initAudio();
+    applyBackground();
     buildLives();
     buildCharGrid();
     selectCharacter(store.get(KEYS.char) || DEFAULT_CHARACTER);
