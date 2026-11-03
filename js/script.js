@@ -14,17 +14,17 @@
     //   largura = largura em pixels no jogo
     //   over    = imagem de "fim de jogo" (opcional; sem ela o personagem só tomba)
     const CHARACTERS = {
-        homem_1:  { nome: 'Pessoa 1',  img: 'assets/homem_1.gif',  largura: 82 },
-        homem_2:  { nome: 'Pessoa 2',  img: 'assets/homem_2.gif',  largura: 82 },
-        mulher_1: { nome: 'Pessoa 3', img: 'assets/mulher_1.gif', largura: 120 },
-        mulher_2: { nome: 'Pessoa 4', img: 'assets/mulher_2.gif', largura: 120 },
-        abner:    { nome: 'Abner',    img: 'assets/abner.gif',    largura: 103, secret: true },
-        agatha:   { nome: 'Agatha',   img: 'assets/agatha.gif',   largura: 114, secret: true },
-        arthur:   { nome: 'Arthur',   img: 'assets/arthur.gif',   largura: 82,  secret: true },
-        gabi:     { nome: 'Gabi',     img: 'assets/gabi.gif',     largura: 120, secret: true },
-        leo:      { nome: 'Leo',      img: 'assets/leo.gif',      largura: 110, secret: true },
-        roberto:  { nome: 'Roberto',  img: 'assets/roberto.gif',  largura: 130, over: 'assets/roberto-game-over.png', secret: true },
-        daniel:   { nome: 'Daniel',   img: 'assets/daniel.gif',   largura: 130, over: 'assets/daniel-game-over.png', secret: true }
+        homem_1:  { nome: 'Pessoa 1',  img: 'assets/homem_1.gif',  largura: 82,  over: 'assets/hn.die.gif' },
+        homem_2:  { nome: 'Pessoa 2',  img: 'assets/homem_2.gif',  largura: 82,  over: 'assets/arthur e h1.die.gif' },
+        mulher_1: { nome: 'Pessoa 3', img: 'assets/mulher_1.gif', largura: 120, over: 'assets/mn.die.gif' },
+        mulher_2: { nome: 'Pessoa 4', img: 'assets/mulher_2.gif', largura: 120, over: 'assets/gabi e mb.die.gif' },
+        abner:    { nome: 'Abner',    img: 'assets/abner.gif',    largura: 103, secret: true, over: 'assets/abner.die.gif' },
+        agatha:   { nome: 'Agatha',   img: 'assets/agatha.gif',   largura: 114, secret: true, over: 'assets/gabi e mb.die.gif' },
+        arthur:   { nome: 'Arthur',   img: 'assets/arthur.gif',   largura: 82,  secret: true, over: 'assets/arthur e h1.die.gif' },
+        gabi:     { nome: 'Gabi',     img: 'assets/gabi.gif',     largura: 120, secret: true, over: 'assets/gabi e mb.die.gif' },
+        leo:      { nome: 'Leo',      img: 'assets/leo.gif',      largura: 110, secret: true, over: 'assets/leo.die.gif' },
+        roberto:  { nome: 'Roberto',  img: 'assets/roberto.gif',  largura: 130, over: 'assets/roberto.die.gif', secret: true },
+        daniel:   { nome: 'Daniel',   img: 'assets/daniel.gif',   largura: 130, over: 'assets/daniel.die.gif', secret: true }
     };
     // Precisa ser um personagem que NÃO seja secreto (é o que todo mundo tem de início)
     const DEFAULT_CHARACTER = 'homem_1';
@@ -100,7 +100,7 @@
     const JUMP_VELOCITY = 950;     // px/s
     const JUMP_BUFFER = 0.12;      // perdoa o toque dado um instante antes de aterrissar
     const PLAYER_X = 28;
-    const PIPE_BASE_W = 150;       // largura do robô (obstáculo), na altura de referência de 480px
+    const PIPE_BASE_W = 100;       // largura do robô (obstáculo), na altura de referência de 480px
     const COIN_BASE = 34;
 
     const KEYS = {
