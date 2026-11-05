@@ -383,6 +383,15 @@
         return true;
     }
 
+    // Bloqueia de novo todos os personagens secretos (para a próxima pessoa)
+    function resetUnlocked() {
+        unlocked.clear();
+        store.set(KEYS.unlocked, '[]');
+        buildCharGrid();
+        // Se o personagem escolhido era secreto, volta para o padrão
+        if (isLocked(state.char)) selectCharacter(DEFAULT_CHARACTER);
+    }
+
     // Fundo atual: o secreto (se houver) ou o do nível em que o jogador está
     const currentBg = () => (state.theme ? THEMES[state.theme] : SCENES[state.scene]);
 
@@ -1092,8 +1101,10 @@
             playerInput.focus();
             return;
         }
+        // Nome diferente do último jogador = pessoa nova: os secretos voltam a ficar bloqueados
+        const isNewPerson = normalizeName(state.player || '') !== normalizeName(name);
         state.player = name;
-        store.set(KEYS.player, name);
+        if (isNewPerson) resetUnlocked();
 
         // Nome secreto? Libera o personagem e troca o fundo
         const secret = SECRETS[normalizeName(name)];
@@ -1130,6 +1141,7 @@
         clearObjects();
         selectCharacter(state.char);   // volta o sprite normal
         playMusic('menu');
+        playerInput.value = '';        // campo de nome limpo para a próxima pessoa
         showPanel('home');
         openModal(startModal);
     });
@@ -1137,14 +1149,19 @@
     /* =====================================================
        INICIALIZAÇÃO
        ===================================================== */
+    // Toda vez que o jogo é aberto, os personagens secretos voltam a ficar bloqueados
+    unlocked.clear();
+    store.set(KEYS.unlocked, '[]');
+
     initAudio();
     applyBackground();
     buildLives();
     buildCharGrid();
     selectCharacter(store.get(KEYS.char) || DEFAULT_CHARACTER);
 
-    const savedName = store.get(KEYS.player);
-    if (savedName) playerInput.value = savedName;
+    // O nome não fica salvo: apaga qualquer nome guardado por versões antigas
+    store.set(KEYS.player, '');
+    playerInput.value = '';
 
     measure();
     renderIdle();
