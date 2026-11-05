@@ -160,10 +160,6 @@ $vj = @filemtime(__DIR__ . '/js/script.js') ?: 1;
                         <span class="label">Moedas</span>
                         <span class="result-num" id="final-coins-value">0</span>
                     </div>
-                    <div class="result-side">
-                        <span class="label">Seu recorde</span>
-                        <span class="result-num" id="best-score-value">0</span>
-                    </div>
                 </div>
                 <div class="save-status" id="save-status-msg" role="status"></div>
             </div>

@@ -592,7 +592,7 @@ a.btn { display: block; text-align: center; text-decoration: none; }
 /* Resultado */
 .result {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr;
+    grid-template-columns: 1.4fr 1fr;
     background: var(--panel-deep);
     border: 3px solid var(--line);
     border-radius: 8px;

@@ -162,7 +162,6 @@
     const gameoverTitle = $('gameover-title');
     const finalScoreValue = $('final-score-value');
     const finalCoinsValue = $('final-coins-value');
-    const bestScoreValue = $('best-score-value');
     const saveStatusMsg = $('save-status-msg');
     const rankingBody = $('ranking-body');
     const btnRestart = $('btn-restart');
@@ -977,13 +976,8 @@
             probe.src = c.over;
         }
 
-        const previousBest = parseInt(store.get(KEYS.best), 10) || 0;
-        const best = Math.max(previousBest, state.score);
-        store.set(KEYS.best, best);
-
         finalScoreValue.textContent = state.score;
         finalCoinsValue.textContent = state.coins;
-        bestScoreValue.textContent = best;
         saveStatusMsg.textContent = 'Salvando pontuação…';
         saveStatusMsg.style.color = '#ffc531';
 
