@@ -14,17 +14,17 @@
     //   largura = largura em pixels no jogo
     //   over    = imagem de "fim de jogo" (opcional; sem ela o personagem só tomba)
     const CHARACTERS = {
-        homem_1:  { nome: 'Pessoa 1',  img: 'assets/homem_1.gif',  largura: 82,  over: 'assets/hn.die.gif' },
-        homem_2:  { nome: 'Pessoa 2',  img: 'assets/homem_2.gif',  largura: 82,  over: 'assets/arthur e h1.die.gif' },
+        homem_1: { nome: 'Pessoa 1', img: 'assets/homem_1.gif', largura: 82, over: 'assets/hn.die.gif' },
+        homem_2: { nome: 'Pessoa 2', img: 'assets/homem_2.gif', largura: 82, over: 'assets/arthur e h1.die.gif' },
         mulher_1: { nome: 'Pessoa 3', img: 'assets/mulher_1.gif', largura: 120, over: 'assets/mn.die.gif' },
         mulher_2: { nome: 'Pessoa 4', img: 'assets/mulher_2.gif', largura: 120, over: 'assets/gabi e mb.die.gif' },
-        abner:    { nome: 'Abner',    img: 'assets/abner.gif',    largura: 103, secret: true, over: 'assets/abner.die.gif' },
-        agatha:   { nome: 'Agatha',   img: 'assets/agatha.gif',   largura: 114, secret: true, over: 'assets/gabi e mb.die.gif' },
-        arthur:   { nome: 'Arthur',   img: 'assets/arthur.gif',   largura: 82,  secret: true, over: 'assets/arthur e h1.die.gif' },
-        gabi:     { nome: 'Gabi',     img: 'assets/gabi.gif',     largura: 120, secret: true, over: 'assets/gabi e mb.die.gif' },
-        leo:      { nome: 'Leo',      img: 'assets/leo.gif',      largura: 110, secret: true, over: 'assets/leo.die.gif' },
-        roberto:  { nome: 'Roberto',  img: 'assets/roberto.gif',  largura: 130, over: 'assets/roberto.die.gif', secret: true },
-        daniel:   { nome: 'Daniel',   img: 'assets/daniel.gif',   largura: 130, over: 'assets/daniel.die.gif', secret: true }
+        abner: { nome: 'Abner', img: 'assets/abner.gif', largura: 103, secret: true, over: 'assets/abner.die.gif' },
+        agatha: { nome: 'Agatha', img: 'assets/agatha.gif', largura: 114, secret: true, over: 'assets/gabi e mb.die.gif' },
+        arthur: { nome: 'Arthur', img: 'assets/arthur.gif', largura: 82, secret: true, over: 'assets/arthur e h1.die.gif' },
+        gabi: { nome: 'Gabi', img: 'assets/gabi.gif', largura: 120, secret: true, over: 'assets/gabi e mb.die.gif' },
+        leo: { nome: 'Leo', img: 'assets/leo.gif', largura: 110, secret: true, over: 'assets/leo.die.gif' },
+        roberto: { nome: 'Roberto', img: 'assets/roberto.gif', largura: 130, over: 'assets/roberto.die.gif', secret: true },
+        daniel: { nome: 'Daniel', img: 'assets/daniel.gif', largura: 130, over: 'assets/daniel.die.gif', secret: true }
     };
     // Precisa ser um personagem que NÃO seja secreto (é o que todo mundo tem de início)
     const DEFAULT_CHARACTER = 'homem_1';
@@ -35,19 +35,19 @@
     // e o fundo do jogo vira a imagem do tema enquanto você jogar com esse nome.
     //   groundFrac = altura do chão na imagem, como fração da altura (de baixo pra cima)
     const THEMES = {
-        toquio:  { src: 'assets/toquio.png',  ratio: 1671 / 941, groundFrac: 0.102 },
+        toquio: { src: 'assets/toquio.png', ratio: 1671 / 941, groundFrac: 0.102 },
         galinha: { src: 'assets/galinha.png', ratio: 1672 / 941, groundFrac: 0.208 }
     };
     const SECRETS = {
         roberto: { char: 'roberto', theme: 'toquio' },
-        daniel:  { char: 'daniel',  theme: 'galinha' },
+        daniel: { char: 'daniel', theme: 'galinha' },
         // Sem theme = só libera o personagem, o cenário continua o normal
-        leo:     { char: 'leo',     theme: null },
-        gabi:    { char: 'gabi',    theme: null },
-        agatha:  { char: 'agatha',  theme: null },
-        abner:   { char: 'abner',   theme: null },
-        artur:   { char: 'arthur',  theme: null },
-        arthur:  { char: 'arthur',  theme: null }
+        leo: { char: 'leo', theme: null },
+        gabi: { char: 'gabi', theme: null },
+        agatha: { char: 'agatha', theme: null },
+        abner: { char: 'abner', theme: null },
+        artur: { char: 'arthur', theme: null },
+        arthur: { char: 'arthur', theme: null }
     };
     const BG_SPEED_FACTOR = 0.6;   // o fundo rola um pouco mais devagar que os canos
 
@@ -56,10 +56,10 @@
     //   groundFrac = altura do chão na imagem (de baixo pra cima), como fração da altura.
     //                Se o personagem parecer "flutuando" ou "afundado", ajuste só esse número.
     const SCENES = [
-        { src: 'assets/entradaSesi.png',  ratio: 2048 / 768, groundFrac: 0.238 },
+        { src: 'assets/entradaSesi.png', ratio: 2048 / 768, groundFrac: 0.238 },
         { src: 'assets/entradaSenai.png', ratio: 2048 / 768, groundFrac: 0.190 },
-        { src: 'assets/ladoSenai.png',    ratio: 2172 / 724, groundFrac: 0.137 },
-        { src: 'assets/ladoSesi.jpg',     ratio: 1584 / 672, groundFrac: 0.122 }
+        { src: 'assets/ladoSenai.png', ratio: 2172 / 724, groundFrac: 0.137 },
+        { src: 'assets/ladoSesi.jpg', ratio: 1584 / 672, groundFrac: 0.122 }
     ];
     const sceneIndexFor = (nivel) => (nivel - 1) % SCENES.length;
 
@@ -75,15 +75,15 @@
     // Depois do último nível da tabela o jogo continua sem fim: a cada ENDLESS_STEP
     // pontos sobe mais um nível, até a velocidade máxima (MAX_RATE).
     const LEVELS = [
-        { nivel: 1,  pontos: 0,    rate: 1.00 },
-        { nivel: 2,  pontos: 200,  rate: 1.15 },
-        { nivel: 3,  pontos: 450,  rate: 1.30 },
-        { nivel: 4,  pontos: 750,  rate: 1.45 },
-        { nivel: 5,  pontos: 1100, rate: 1.60 },
-        { nivel: 6,  pontos: 1500, rate: 1.75 },
-        { nivel: 7,  pontos: 1950, rate: 1.90 },
-        { nivel: 8,  pontos: 2450, rate: 2.05 },
-        { nivel: 9,  pontos: 3000, rate: 2.20 },
+        { nivel: 1, pontos: 0, rate: 1.00 },
+        { nivel: 2, pontos: 200, rate: 1.15 },
+        { nivel: 3, pontos: 450, rate: 1.30 },
+        { nivel: 4, pontos: 750, rate: 1.45 },
+        { nivel: 5, pontos: 1100, rate: 1.60 },
+        { nivel: 6, pontos: 1500, rate: 1.75 },
+        { nivel: 7, pontos: 1950, rate: 1.90 },
+        { nivel: 8, pontos: 2450, rate: 2.05 },
+        { nivel: 9, pontos: 3000, rate: 2.20 },
         { nivel: 10, pontos: 3600, rate: 2.35 },
         { nivel: 11, pontos: 4250, rate: 2.50 },
         { nivel: 12, pontos: 4950, rate: 2.65 }
@@ -338,28 +338,40 @@
 
     function initAudio() {
         renderSoundToggle();
-        soundToggle.addEventListener('click', () => setMuted(!muted));
-
-        // Navegadores só deixam tocar som depois do primeiro toque/tecla na página
-        const unlockEvents = ['pointerdown', 'pointerup', 'click', 'keydown', 'touchend'];
-        const removeUnlock = () => unlockEvents.forEach((ev) => window.removeEventListener(ev, unlock));
-        function unlock() {
+        soundToggle.addEventListener('click', () => {
             getAudioCtx();
-            if (muted || !currentTrack) return;
-            const p = music[currentTrack].play();
-            if (p && p.then) p.then(removeUnlock).catch(() => { /* tenta de novo no próximo toque */ });
-            else removeUnlock();
-        }
-        unlockEvents.forEach((ev) => window.addEventListener(ev, unlock));
-
-        // Aba escondida: pausa a música
-        document.addEventListener('visibilitychange', () => {
-            if (!currentTrack) return;
-            if (document.hidden) music[currentTrack].pause();
-            else if (!muted) tryPlay(music[currentTrack]);
+            setMuted(!muted);
         });
 
-        playMusic('menu');
+        const unlockEvents = ['pointerdown', 'pointerup', 'click', 'keydown', 'touchend'];
+
+        function unlock() {
+            const ctx = getAudioCtx();
+            if (ctx && ctx.state === 'suspended') {
+                ctx.resume();
+            }
+
+            if (currentTrack && music[currentTrack]) {
+                if (!muted) {
+                    tryPlay(music[currentTrack]);
+                }
+            } else {
+                playMusic('menu');
+            }
+
+            unlockEvents.forEach((ev) => window.removeEventListener(ev, unlock));
+        }
+
+        unlockEvents.forEach((ev) => window.addEventListener(ev, unlock));
+
+        document.addEventListener('visibilitychange', () => {
+            if (!currentTrack || !music[currentTrack]) return;
+            if (document.hidden) {
+                music[currentTrack].pause();
+            } else if (!muted) {
+                tryPlay(music[currentTrack]);
+            }
+        });
     }
 
     /* =====================================================
