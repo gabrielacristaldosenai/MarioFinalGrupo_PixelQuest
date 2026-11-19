@@ -123,7 +123,7 @@ $vj = @filemtime(__DIR__ . '/js/script.js') ?: 1;
                     <div class="modal-actions">
                         <button type="submit" class="btn btn-primary" id="btn-start">Jogar</button>
                         <button type="button" class="btn btn-secondary" id="btn-view-ranking">Ver ranking</button>
-                        <a href="empresa.html" class="btn btn-secondary" id="btn-company">Site da empresa</a>
+                        <a href="empresa.html" class="btn btn-secondary" id="btn-company" target="_blank">Site da empresa</a>
                     </div>
                 </form>
             </section>
